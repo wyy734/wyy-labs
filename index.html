@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>计算机网络应用 · 在线实训平台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2310635a'/%3E%3Cpath d='M8 20h16M12 13h8' stroke='%23fff' stroke-width='2.4' fill='none'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#f6f5f1;--card:#fff;--ink:#22282a;--ink2:#5b6467;--line:#dcdcd4;--line2:#ecebe4;
+  --accent:#10635a;--accent2:#e4efec;--warn:#9a5b12;--warn2:#fbf0dd;--done:#2f6b3c;--bad:#a3372f;--bad2:#fbeeec;
+  --r:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+h1,h2,h3{font-family:"Songti SC",Georgia,serif;font-weight:600;margin:0}
+button,input,textarea{font-family:inherit}
+.hd{position:sticky;top:0;z-index:20;background:rgba(246,245,241,.94);border-bottom:1px solid var(--line)}
+.hd-in{max-width:820px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.back{border:1px solid var(--line);background:#fff;color:var(--ink2);font-size:13px;padding:8px 10px;border-radius:8px;min-height:40px}
+.back[hidden]{display:none}
+.brand{flex:1;min-width:0}
+.brand h1{font-size:17px;line-height:1.25}
+.brand p{margin:2px 0 0;font-size:11.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{font-size:12px;color:var(--accent);background:var(--accent2);border:1px solid #cfe2dd;padding:6px 9px;border-radius:99px;white-space:nowrap}
+main{padding:16px 0 48px}
+.wrap{max-width:820px;margin:0 auto;padding:0 14px}
+.lede h2{font-size:22px;line-height:1.35}
+.lede p{margin:8px 0 10px;color:var(--ink2);font-size:14px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.pills span{font-size:12px;color:var(--ink2);background:#fff;border:1px solid var(--line);padding:4px 9px;border-radius:99px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.card h3{font-size:15px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.card h3 .s{font-family:inherit;font-weight:400;font-size:12px;color:var(--ink2)}
+.fields{display:grid;gap:10px;margin-top:10px}
+@media(min-width:560px){.fields{grid-template-columns:repeat(3,1fr)}}
+.f label{display:block;font-size:12.5px;color:var(--ink2);margin-bottom:4px}
+.f input{width:100%;min-height:46px;padding:10px 11px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.f .hint{font-size:11.5px;color:var(--ink2);margin-top:4px}
+.cards{display:grid;gap:10px;margin-top:12px}
+@media(min-width:700px){.cards{grid-template-columns:repeat(2,1fr)}}
+.pc{display:block;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:13px;color:inherit;text-decoration:none}
+.pc .no{font-size:11.5px;color:var(--accent);letter-spacing:.08em}
+.pc h4{font-size:16px;margin:3px 0 4px}
+.pc p{margin:0;font-size:12.5px;color:var(--ink2);line-height:1.6}
+.pc .st{margin-top:9px;display:flex;align-items:center;gap:8px}
+.bar{flex:1;height:6px;background:var(--line2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .3s}
+.pc .ct{font-size:11.5px;color:var(--ink2);white-space:nowrap}
+.phead h2{font-size:21px;line-height:1.35;margin-top:2px}
+.phead p{margin:6px 0 0;color:var(--ink2);font-size:14px}
+.kv{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:10px;font-size:13px}
+.kv col:first-child{width:32%}
+.kv th,.kv td{border:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:middle;word-break:break-word}
+.kv th{background:#efeee8;font-weight:600;font-size:12.5px}
+.board{margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px}
+.board svg{display:block;width:100%;height:auto;touch-action:manipulation}
+.board.act{border-color:#c8564a;box-shadow:0 0 0 3px #fdecea}
+.node rect{fill:#fbfbf7;stroke:#c9c9bf;stroke-width:1.2}
+.node text{font-size:10.5px;fill:#22282a}
+.node.bad rect{fill:#fff7f5;stroke:#c8564a;stroke-width:2}
+.node.bad text{fill:#8f3a31}
+.node.good rect{fill:#f6fbf4;stroke:#7fae8f;stroke-width:1.8}
+.node.good text{fill:#2f6b3c}
+.fixbadge rect{fill:#fdecea;stroke:#c8564a;stroke-width:1.2}
+.fixbadge text{font-size:10px;fill:#8f3a31}
+.hotbadge rect{fill:#e6f2ee;stroke:#10635a;stroke-width:1.2}
+.hotbadge text{font-size:9.5px;fill:#10635a}
+.chart{margin:8px 0;padding:8px 9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.chart .ct{font-size:12px;font-weight:600;color:#3d4649;margin-bottom:2px}
+.chart svg{width:100%;height:auto;display:block}
+.port{fill:#fff;stroke:#9fb4ae;stroke-width:2}
+.phit{fill:transparent;stroke:none}
+.port.sel{fill:#10635a;stroke:#10635a}
+.port.ok{fill:#bcded7;stroke:#bcded7}
+.link{stroke:#8fb2ab;stroke-width:2}
+.link.live{stroke:#10635a;stroke-width:3;animation:flow 1.2s linear infinite}
+@keyframes flow{0%,100%{opacity:.5}50%{opacity:1}}
+.bdline{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink2);padding:4px 4px 0}
+.tip{font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.65}
+.step{border:1px solid var(--line);border-radius:9px;padding:12px;margin-top:10px;background:#fdfdfb}
+.step.cur{border-color:#9fc3bb;background:#fbfefd}
+.step.done{background:#f8fbf7;border-color:#d3e2cd}
+.sh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sn{width:24px;height:24px;flex:none;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;display:grid;place-items:center;font-weight:600}
+.step.done .sn{background:var(--done)}
+.sh b{font-size:14.5px}
+.tg{font-size:11px;padding:2px 7px;border-radius:99px;border:1px solid #cfe2dd;color:var(--accent);background:var(--accent2)}
+.tg.p{border-color:#f0dcb8;color:var(--warn);background:var(--warn2)}
+.lock{font-size:11.5px;color:var(--ink2);margin-left:auto}
+.sd{margin-top:8px;font-size:13.5px;color:var(--ink2);line-height:1.75}
+.sd b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.chipbtn{display:inline-flex;align-items:center;min-height:44px;padding:0 13px;border:1px solid var(--line);background:#fff;border-radius:9px;font-size:14px;color:var(--ink)}
+.chipbtn.sel{border-color:var(--accent);background:var(--accent2);color:var(--accent)}
+.chipbtn.ok{border-color:#cfe1c8;background:#eef6ec;color:var(--done)}
+.chipbtn.off{border-style:dashed;background:#f4f3ee;color:var(--ink2);opacity:.85;pointer-events:none}
+.opt{display:block;width:100%;text-align:left;min-height:46px;margin-top:8px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:14px;color:var(--ink);line-height:1.5}
+.opt.sel{border-color:var(--accent);background:var(--accent2)}
+.opt.ok{border-color:#cfe1c8;background:#eef6ec}
+.opt.bad{border-color:#e3c5c1;background:var(--bad2)}
+.opt .ord{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;background:#efeee8;color:var(--ink2);font-size:12px;margin-right:8px;vertical-align:middle}
+.opt.sel .ord{background:var(--accent);color:#fff}
+.sbtn{min-height:46px;padding:0 16px;border:0;border-radius:9px;background:var(--accent);color:#fff;font-size:15px}
+.sbtn[disabled]{opacity:.5}
+.sbtn.g{background:#fff;border:1px solid var(--line);color:var(--ink2)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.inp{width:100%;min-height:46px;padding:10px 12px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;background:#f7f6f1;border:1px solid var(--line2);border-radius:9px;padding:11px;line-height:2.1;white-space:pre-wrap;word-break:break-word;color:#25302f}
+.code input{width:72px;font-family:inherit;font-size:15px;text-align:center;border:0;border-bottom:2px solid var(--accent);background:#fff;border-radius:4px;padding:3px 4px;color:var(--accent)}
+.out{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:13px;line-height:1.7;color:var(--ink2);min-height:44px}
+.out table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12.5px;margin-top:6px}
+.out th,.out td{border:1px solid var(--line);padding:5px 6px;text-align:left;word-break:break-word}
+.out th{background:#f1f0ea}
+.rf{margin-top:12px}
+.rf label{font-size:13.5px;font-weight:600;color:var(--accent)}
+.rf textarea{width:100%;min-height:96px;margin-top:6px;padding:11px;font-size:16px;line-height:1.7;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);resize:vertical}
+.acts{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,14px);max-width:88%;background:#22282a;color:#fff;font-size:13.5px;padding:10px 14px;border-radius:9px;opacity:0;pointer-events:none;transition:.25s;z-index:50;line-height:1.5}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media print{.hd,.acts,.toast,.back{display:none}}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-in">
+    <button class="back" id="btnBack" hidden>← 实训列表</button>
+    <div class="brand">
+      <h1>计算机网络应用 · 在线实训</h1>
+      <p>国家开放大学考试改革试点课程（53690）· 湖北开放大学人工智能学院</p>
+    </div>
+    <div class="chip" id="chip">报告 0 / 15 项</div>
+  </div>
+</header>
+
+<main>
+<section id="viewHome">
+  <div class="wrap">
+    <div class="lede">
+      <h2>一步一步动手做，做完直接导出实验报告</h2>
+      <p>每个实验拆成 6—10 小步：在拓扑图上连线、点节点下面的按钮，再填代码空、写两三句结论。全程在页面上模拟，不用装软件、不用注册、不联网也能做。</p>
+      <div class="pills">
+        <span>免注册</span><span>手机可用</span><span>可视化模拟</span><span>每步只做一件事</span><span>一键导出报告</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>先填学号 <span class="s">学号决定你的专属数据：网段、阈值、故障节点都不一样</span></h3>
+      <div class="fields">
+        <div class="f"><label for="sid">学号（必填）</label><input id="sid" type="text" inputmode="numeric" placeholder="例如 2026001234"><div class="hint">不填就不能开始操作</div></div>
+        <div class="f"><label for="snm">姓名</label><input id="snm" type="text" placeholder="例如 张三"></div>
+        <div class="f"><label for="scl">班级（可留空）</label><input id="scl" type="text" placeholder="例如 25 春大数据 1 班"></div>
+      </div>
+      <div class="tip" id="saveTip">填完自动存在本机，下次打开还在。换人换学号，实验数据随之改变。</div>
+    </div>
+
+    <div class="card">
+      <h3>每个实验怎么做 <span class="s">六到十步一条路，做完一步才解锁下一步</span></h3>
+      <div class="tip">
+        ① 认识设备和连线（部分实验）→ ② 填地址或参数 → ③ 点按钮跑模拟 → ④ 看结果 → ⑤ 排错或判断 → ⑥ 写结论并导出。<br>
+        标“共性”的步骤全班一样；标“个性”的步骤用你自己的数据，报告里会带上你的参数，抄同学的会对不上。
+      </div>
+    </div>
+
+    <div class="cards" id="cardList"></div>
+    <div class="acts" style="justify-content:center;margin:18px 0 4px">
+      <button class="sbtn g" data-a="resetall">清空全部记录，从头开始</button>
+    </div>
+  </div>
+</section>
+
+<section id="viewProject" hidden>
+  <div class="wrap" id="pbody"></div>
+</section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LS = 'wl_sy_v6';
+let state = {stu:{id:'',name:'',cls:''}, prog:{}, ans:{}, links:{}, sim:{}, rep:{}};
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} }
+function load(){
+  try{
+    const r = JSON.parse(localStorage.getItem(LS) || '0');
+    if(r && r.stu) state = Object.assign(state, r);
+  }catch(e){}
+}
+function toast(m){
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('on');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('on'), 2300);
+}
+
+const DATA = [
+{
+ id:'p1', no:'项目一', title:'网络环境规划与设计', score:'10 分',
+ intro:'给一个 3 节点的小集群配上网，做一次巡检，找出那台有故障的机器并把它修好。',
+ board:'p1',
+ steps:[
+  {t:'认设备：把四台设备点一遍', tag:'共性', k:'tap', need:4, see:'四个设备都点过，知道谁负责什么。',
+   hint:'四台设备逐个点一下，点过会变选中。',
+   items:[
+    {t:'nn-01 主节点', d:'管文件目录，地址 .11'},
+    {t:'dn-01 数据节点', d:'存数据块，地址 .12'},
+    {t:'dn-02 数据节点', d:'存数据块副本，地址 .13'},
+    {t:'sw-01 交换机', d:'把三台机器连在一起'}]},
+  {t:'连网线：三台主机接到交换机', tag:'共性', k:'wire', need:3, see:'三条线都连上，画布提示“已连 3/3”。',
+   hint:'先点主机上的小圆点，再点交换机上的小圆点。连错会提示你。'},
+  {t:'填 IP 地址（用你自己的网段）', tag:'个性', k:'input', see:'三个地址都在你的网段里，尾号是 .11、.12、.13。',
+   hint:'看下面“我的专属数据”里的网段，例如 10.20.27.0/24 就填 10.20.27.11。',
+   fs:[
+    {k:'ip1', l:'nn-01 的 IP', ph:'10.20.__.11', ans:p=>p.ips[0]},
+    {k:'ip2', l:'dn-01 的 IP', ph:'10.20.__.12', ans:p=>p.ips[1]},
+    {k:'ip3', l:'dn-02 的 IP', ph:'10.20.__.13', ans:p=>p.ips[2]}]},
+  {t:'填网关和 DNS', tag:'共性', k:'input', see:'网关是网段里的 .1，DNS 是 .2，两个都对。',
+   hint:'网关通常取网段的第一个地址，DNS 取第二个。',
+   fs:[
+    {k:'gw', l:'网关', ph:'10.20.__.1', ans:p=>p.gw},
+    {k:'dns', l:'DNS', ph:'10.20.__.2', ans:p=>p.dns}]},
+  {t:'点按钮跑一次巡检', tag:'共性', k:'run', run:'probe', btn:'开始巡检',
+   see:'三台机器都有状态，其中一台上报异常。', hint:'点完按钮等一会儿，结果一行行出来，重点看“异常”那行。'},
+  {t:'修好那台有故障的机器', tag:'个性', k:'fix', see:'拓扑图上的按钮变“点此复检”，复检后机器变绿、三台全部正常。',
+   hint:'回到上方拓扑图：红色机器下面就是操作按钮，先“点此打开”，再“点此复检”。'}
+ ],
+ rep:[
+  ['plan','地址规划说明','写清你给三台机器各分配了什么地址、为什么这样分。','我的网段是 10.20.__.0/24，三台机器分别用 .11、.12、.13……'],
+  ['diag','故障判断与修复依据','写清你从哪个现象判断出故障，改了哪里，复检结果如何。','巡检里 dn-01 的 9870 显示未开放，我打开端口后复检变正常'],
+  ['mine','个性结论','用你自己的网段、阈值、故障节点说一句结论。','我的故障点是 __，阈值 __ ms，所以判断为 __']
+ ]
+},
+{
+ id:'p2', no:'项目二', title:'网络服务配置与应用', score:'10 分',
+ intro:'在外网和服务器之间放一台防火墙：先写 Python 白名单判断，再在图上排规则、发测试、看限流，最后算断点续传的偏移。',
+ board:'p2',
+ steps:[
+  {t:'连链路：外网 → 防火墙 → 服务器', tag:'共性', k:'wire', need:2, see:'两条线连上，提示“已连 2/2”。',
+   hint:'按顺序连：先外网右侧的圆点到防火墙左侧，再防火墙右侧到服务器左侧。'},
+  {t:'写白名单判断（Python）', tag:'共性', k:'code',
+   see:'三个空都对：网段前缀、端口列表、其余一律 DROP。',
+   hint:'三个空照着填：网段 10.20.30.（只写到最后一个点）、端口 22, 8020, 9870、其余返回 DROP。',
+   tt:['ALLOW_NET = "{0}"          # 只放行这个网段',
+       'PORTS = [{1}]              # 要放行的三个端口',
+       'if src.startswith(ALLOW_NET) and port in PORTS:',
+       '    return "ACCEPT"',
+       'return "{2}"               # 其余一律拒绝'],
+   fs:[
+    {k:'net', l:'网段前缀', ph:'10.20.30.', also:['10.20.30.0/24','10.20.30.0'], ans:p=>'10.20.30.'},
+    {k:'ports', l:'端口列表', ph:'22, 8020, 9870', set:true, ans:p=>'22, 8020, 9870'},
+    {k:'deny', l:'其余返回', ph:'DROP', ans:p=>'DROP'}]},
+  {t:'在图上给防火墙排规则顺序', tag:'共性', k:'order',
+   see:'三条规则排好：已建会话不能排在“全部拒绝”后面。',
+   hint:'点三条规则，按你希望的执行顺序点，先点的排最前。',
+   opts:[
+    {t:'已建会话（ESTABLISHED）放行'},
+    {t:'白名单 10.20.30.0/24 → 22 / 8020 / 9870 允许'},
+    {t:'其余全部拒绝（DROP）'}]},
+  {t:'从外网发 4 条测试连接（在图上点）', tag:'共性', k:'run', run:'test',
+   hot:[{node:'net', t:'发起测试连接'}],
+   see:'四条结果：白名单放行、外网被拒、超阈值限流、已建会话放行。',
+   hint:'到上方拓扑图，点“外网”节点下面的按钮，这一屏没有按钮。'},
+  {t:'读结果：第 2 条为什么被拒绝', tag:'共性', k:'pick', mode:'one',
+   see:'选“来源不在白名单”。',
+   hint:'看结果第 2 条：来源 0.0.0.0/0 访问 9870。它被拒的原因只有一个。',
+   opts:[
+    {t:'来源不在白名单', ok:true},
+    {t:'服务器没开 9870', ok:false},
+    {t:'被限流挡了', ok:false}]},
+  {t:'写限流判断（Python）', tag:'个性', k:'code',
+   see:'窗口、阈值、返回码三个空都用你的专属数据。',
+   hint:'窗口和阈值在“我的专属数据”里；超过阈值返回 429。',
+   tt:['WINDOW = {0}        # 统计窗口（秒）',
+       'LIMIT = {1}         # 窗口内允许的新建连接数',
+       'if count[sip] > LIMIT:',
+       '    return {2}      # 超过就限流'],
+   fs:[
+    {k:'win', l:'WINDOW', ph:'数字', ans:p=>String(p.window)},
+    {k:'lim', l:'LIMIT', ph:'数字', ans:p=>String(p.rate)},
+    {k:'code', l:'超限返回码', ph:'3 位数字', ans:p=>'429'}]},
+  {t:'从外网连发 30 次（在图上点）', tag:'个性', k:'run', run:'rate',
+   hot:[{node:'net', t:'连发 30 次'}],
+   see:'结果里写明第几次开始被限流。',
+   hint:'到拓扑图点“外网”节点下面的按钮，注意读“第 __ 次起限流”。'},
+  {t:'读结果：第几次开始被限流', tag:'个性', k:'input',
+   see:'填的数字等于你的阈值加 1。',
+   hint:'结果里写着“第 __ 次起：限流”，照着这个数填。',
+   fs:[{k:'nth', l:'第几次开始限流', ph:'数字', ans:p=>String(p.rate+1)}]},
+  {t:'从服务器发起断点续传（在图上点）', tag:'个性', k:'run', run:'resume',
+   hot:[{node:'srv', t:'传文件'}],
+   see:'中断位置和续传偏移都与你自己的数据一致。',
+   hint:'到拓扑图点“服务器”节点下面的按钮，看中断在百分之几。'},
+  {t:'算续传偏移（Python）', tag:'个性', k:'code',
+   see:'文件大小、中断百分比两个空都对。',
+   hint:'两个数都在“我的专属数据”里。',
+   tt:['SIZE = {0} * 1024 * 1024          # MB → 字节',
+       'OFFSET = int(SIZE * {1} / 100)    # 从断点接着传',
+       'resume_from(OFFSET)'],
+   fs:[
+    {k:'size', l:'文件大小（MB）', ph:'数字', ans:p=>String(p.size)},
+    {k:'brk', l:'中断位置（%）', ph:'数字', ans:p=>String(p.brk)}]}
+ ],
+ rep:[
+  ['rule','规则与顺序说明','写清三条规则，并说明为什么“已建会话”不能排在“全部拒绝”后面。','我排的顺序是……'],
+  ['code','用 Python 说清放行与限流','白名单用什么判断、限流按什么条件、超限返回什么。','白名单用 startswith 判网段，用 in 判端口……'],
+  ['mine','个性结论','带上你的窗口、阈值、文件大小说结论。','我这份是 __ 秒 __ 个，文件 __ MB，在 __% 处中断']
+ ]
+},
+{
+ id:'p3', no:'项目三', title:'Python 网络数据采集', score:'10 分',
+ intro:'按你的参数从模拟站点抓一页数据，解析成字段，检查有没有漏字段，再存成两种格式。',
+ board:'',
+ steps:[
+  {t:'设采集参数：抓几条、隔多久、重试几次', tag:'个性', k:'input', see:'三个数与专属数据一致。',
+   hint:'抓取条数、请求间隔、失败重试都在“我的专属数据”里，照抄自己的。',
+   fs:[
+    {k:'items', l:'抓取条数', ph:'数字', ans:p=>String(p.items)},
+    {k:'gap', l:'请求间隔（秒）', ph:'数字', ans:p=>String(p.gap)},
+    {k:'retry', l:'失败重试（次）', ph:'数字', ans:p=>String(p.retry)}]},
+  {t:'看一眼 robots：哪些能抓', tag:'共性', k:'pick', mode:'one', see:'选“列表页可以抓，登录页不抓”。',
+   hint:'robots 是站点写给爬虫的规矩，先看规矩再动手。',
+   opts:[
+    {t:'列表页可以抓，登录页和后台不抓', ok:true},
+    {t:'整站都不能抓', ok:false},
+    {t:'只要有数据就随便抓', ok:false}]},
+  {t:'写请求头与重试（Python）', tag:'个性', k:'code',
+   see:'UA 和重试次数两个空都对。', hint:'UA 填 Mozilla/5.0；重试次数看专属数据。',
+   tt:['HEADERS = {"User-Agent": "{0}"}      # 伪装成浏览器',
+       'for i in range({1}):                 # 失败最多重试几次',
+       '    r = requests.get(url, headers=HEADERS, timeout=5)'],
+   fs:[
+    {k:'ua', l:'User-Agent', ph:'Mozilla/5.0', ans:p=>'Mozilla/5.0'},
+    {k:'rty', l:'重试次数', ph:'数字', ans:p=>String(p.retry)}]},
+  {t:'点“开始抓取”，看着一条条进来', tag:'共性', k:'run', run:'fetch', btn:'开始抓取',
+   see:'表格里出现与你条数相同的记录。', hint:'点完按钮等一会儿，表格会出来。'},
+  {t:'读结果：一共抓到几条', tag:'个性', k:'input', see:'填的数与结果第一行一致。',
+   hint:'看结果第一行“共 __ 条”，照着填。',
+   fs:[{k:'got', l:'实际抓到条数', ph:'数字', ans:p=>String(p.items)}]},
+  {t:'补全翻页与限速（Python）', tag:'个性', k:'code', see:'翻页数和间隔两个空都对。',
+   hint:'页数和间隔都在专属数据里。',
+   tt:['for page in range(1, {0} + 1):','    time.sleep({1})        # 每次请求间隔（秒）'],
+   fs:[
+    {k:'pg', l:'翻页数', ph:'数字', ans:p=>String(p.pages)},
+    {k:'gp', l:'间隔（秒）', ph:'数字', ans:p=>String(p.gap)}]},
+  {t:'检查字段有没有缺', tag:'共性', k:'run', run:'check', btn:'检查字段完整性',
+   see:'四列字段完整率 100%，没有空值。', hint:'缺字段就是解析写漏了，实际工作中很常见。'},
+  {t:'读结果：这次检查说明什么', tag:'共性', k:'pick', mode:'one',
+   see:'选“字段完整、没有空值，可以入库”。', hint:'看检查结果三行：完整率、空值、重复各是多少。',
+   opts:[
+    {t:'字段完整、没有空值，可以入库', ok:true},
+    {t:'有 3 条缺字段，要重新抓一遍', ok:false},
+    {t:'重复太多，只能手动整理', ok:false}]},
+  {t:'选两种保存方式', tag:'共性', k:'pick', mode:'multi', see:'同时选中 JSON 和 CSV。',
+   hint:'JSON 给程序读，CSV 给表格软件读，两种都要存。',
+   opts:[
+    {t:'存成 JSON', ok:true},
+    {t:'存成 CSV', ok:true},
+    {t:'只截图，不存文件', ok:false}]},
+  {t:'写存盘代码：编码与中文', tag:'个性', k:'code', see:'编码和 ensure_ascii 两个空都对。',
+   hint:'编码填 utf-8；中文要能直接看懂，ensure_ascii 填 False。',
+   tt:['with open("news.json", "w", encoding="{0}") as f:   # 文件编码',
+       '    json.dump(rows, f, ensure_ascii={1})            # 中文别转成编码'],
+   fs:[
+    {k:'enc', l:'编码', ph:'utf-8', ans:p=>'utf-8'},
+    {k:'ea', l:'ensure_ascii', ph:'False', ans:p=>'False'}]}
+ ],
+ rep:[
+  ['field','字段与请求头说明','写清四个字段怎么来的，UA 写它有什么用、失败重试怎么起作用。','我按标题、时间、链接、摘要四列解析……'],
+  ['limit','限速与取舍','用你的条数和间隔，说明抓得快和礼不礼貌之间的取舍。','我抓 __ 条，每次隔 __ 秒，总共约 __ 秒'],
+  ['mine','个性结论','带上你的条数、间隔、重试次数说结论。','我的条数是 __，间隔 __ 秒，重试 __ 次']
+ ]
+},
+{
+ id:'p4', no:'项目四', title:'网络日志分析与处理', score:'10 分',
+ intro:'把一份访问日志读进来，先看坏行，再算访问量，最后按你的阈值找出异常 IP。',
+ board:'',
+ steps:[
+  {t:'先点“加载日志”', tag:'个性', k:'run', run:'load', btn:'加载日志',
+   see:'总行数、有效行、解析失败行三个数字都出来。', hint:'日志总量按学号生成，人人不同。'},
+  {t:'把三条坏行点出来', tag:'共性', k:'tap', need:3, see:'三条格式不对的行都被选中。',
+   hint:'坏行的特征是字段数不够、时间格式不对，点它们。',
+   items:[
+    {t:'2026-11-10 09:00:01 10.0.0.5 GET /a 200', d:'字段齐全，正常', ok:false},
+    {t:'2026-11-10 09:00:02 10.0.0.5 GET /b', d:'少字段，坏行', ok:true},
+    {t:'2026/11/10 09:00:03 10.0.0.6 POST /c 500', d:'时间格式不对，坏行', ok:true},
+    {t:'10.0.0.7 - - [] "GET /d" 404 0', d:'时间缺失，坏行', ok:true},
+    {t:'2026-11-10 09:00:04 10.0.0.8 GET /e 200', d:'正常', ok:false}]},
+  {t:'读结果：填 PV 和 UV', tag:'个性', k:'input', see:'两个数字与结果区一致。',
+   hint:'PV 是有效请求数，UV 是按 IP 去重后的数量，结果区写着。',
+   fs:[
+    {k:'pv', l:'PV（请求数）', ph:'数字', ans:p=>String(p.total-2)},
+    {k:'uv', l:'UV（去重 IP）', ph:'数字', ans:p=>String(p.uv)}]},
+  {t:'写统计代码：去重与计数（Python）', tag:'个性', k:'code',
+   see:'按哪个字段去重、统计哪个字段，两个空都对。',
+   hint:'日志字段只有 ip / time / method / url / status 五种；UV 按来源 IP 去重，Top10 统计访问地址。',
+   tt:['UV = len(set(r["{0}"] for r in rows))              # 按哪个字段去重',
+       'TOP = Counter(r["{1}"] for r in rows).most_common(10)  # 统计哪个字段'],
+   fs:[
+    {k:'u', l:'UV 去重字段', ph:'ip', ans:p=>'ip'},
+    {k:'t', l:'Top10 统计字段', ph:'url', ans:p=>'url'}]},
+  {t:'按你的阈值找异常', tag:'个性', k:'run', run:'anom', btn:'检测异常',
+   see:'命中 3 个异常 IP，每条都写明命中了哪条规则。', hint:'阈值是你的专属参数，命中数量随之变化。'},
+  {t:'读结果：第 2 条命中哪条规则', tag:'共性', k:'pick', mode:'one',
+   see:'选“404 占比超过阈值”。', hint:'看第 2 条：占比数字和阈值比，别按感觉选。',
+   opts:[
+    {t:'404 占比超过阈值，像扫描探测', ok:true},
+    {t:'同一个 IP 短时间请求太多', ok:false},
+    {t:'登录失败次数太多', ok:false}]},
+  {t:'补全检测的两行代码', tag:'个性', k:'code', see:'窗口和占比阈值都填对。',
+   hint:'两个数都在“我的专属数据”里。',
+   tt:['WIN = {0}      # 滑动窗口（秒）','BAD = {1}      # 404 占比阈值（%）'],
+   fs:[
+    {k:'win', l:'窗口', ph:'数字', ans:p=>String(p.win)},
+    {k:'ratio', l:'404 阈值', ph:'数字', ans:p=>String(p.ratio)}]},
+  {t:'按统计结果出四张图', tag:'共性', k:'run', run:'chart', btn:'生成图表',
+   see:'四张图都出来：PV 趋势、Top10 URL、状态码分布、异常来源。', hint:'图只用来看趋势和分布，别用饼图凑数。'},
+  {t:'选这次该出的四张图', tag:'共性', k:'pick', mode:'multi', see:'选中趋势、Top10、状态码、异常来源四张。',
+   hint:'分析报告要能回答：什么时候多、谁被访问最多、错误码占比多少、异常来自哪里。',
+   opts:[
+    {t:'PV 随时间变化的趋势图', ok:true},
+    {t:'访问最多的 Top10 URL', ok:true},
+    {t:'状态码分布（200/404/500）', ok:true},
+    {t:'异常来源分类（高频、扫描、撞库）', ok:true},
+    {t:'每个 IP 的头像拼图', ok:false}]},
+  {t:'判断这更像哪种攻击', tag:'共性', k:'pick', mode:'one', see:'选“短时间同一 IP 高频新建连接”。',
+   hint:'看日志里同一个 IP 在几秒内冒出很多条，还是各 IP 都来刷同一个接口。',
+   opts:[
+    {t:'短时间同一 IP 高频新建连接（更像 SYN Flood）', ok:true},
+    {t:'很多 IP 一起刷同一个接口（更像 CC）', ok:false},
+    {t:'只是正常访问，不用管', ok:false}]}
+ ],
+ rep:[
+  ['bad','坏行处理说明','三条坏行各坏在哪，你是怎么计数的（不能悄悄丢掉）。','第一条少字段，第二条时间格式不对……'],
+  ['syn','SYN Flood 与 CC 的差异','至少写 200 字，说明两者在日志上的不同表现。','SYN Flood 表现为……，CC 表现为……'],
+  ['mine','个性结论','带上你的日志量、窗口、阈值说结论。','我这份日志 __ 行，窗口 __ 秒，阈值 __%，命中 __ 个 IP']
+ ]
+},
+{
+ id:'p5', no:'综合项目', title:'大数据网络监控助手', score:'20 分',
+ intro:'给几台节点做一条监控线路，跑三轮巡检，让它在连续异常时报警，再写处置建议。',
+ board:'',
+ steps:[
+  {t:'设巡检参数', tag:'个性', k:'input', see:'节点数、周期、阈值与专属数据一致。',
+   hint:'三个数都在“我的专属数据”里。',
+   fs:[
+    {k:'n', l:'节点数量', ph:'数字', ans:p=>String(p.n)},
+    {k:'gap', l:'巡检周期（秒）', ph:'数字', ans:p=>String(p.gap)},
+    {k:'lat', l:'延迟阈值（ms）', ph:'数字', ans:p=>String(p.lat)}]},
+  {t:'挑出该报警的三种情况', tag:'共性', k:'pick', mode:'multi', see:'选中“主机不可达”“端口关闭”“延迟超阈值”。',
+   hint:'监控只关心这三类异常，其他都算正常。',
+   opts:[
+    {t:'主机不可达', ok:true},
+    {t:'关键端口关闭', ok:true},
+    {t:'延迟超过阈值', ok:true},
+    {t:'响应快了一点', ok:false}]},
+  {t:'写巡检判定代码（Python）', tag:'个性', k:'code',
+   see:'遍历节点清单、连续次数两个空都对。',
+   hint:'遍历对象填 nodes；连续次数在专属数据里（连续 2 次才报警）。',
+   tt:['for node in {0}:                    # 遍历节点清单',
+       '    if fails[node] >= {1}:            # 连续几次异常才告警',
+       '        send_alert(node)'],
+   fs:[
+    {k:'nd', l:'遍历对象', ph:'nodes', ans:p=>'nodes'},
+    {k:'cf', l:'连续次数', ph:'数字', ans:p=>String(p.confirm)}]},
+  {t:'跑三轮巡检，看灯怎么变', tag:'共性', k:'run', run:'patrol', btn:'开始巡检（3 轮）',
+   see:'三轮都跑完，故障节点的灯变红。', hint:'一台不能连不能影响其他节点继续巡检。'},
+  {t:'读结果：第几轮结束时发出告警', tag:'个性', k:'input', see:'填的数与结果最后一行一致。',
+   hint:'看最后一行“第 __ 轮结束：…发出 1 条告警”，照着填。',
+   fs:[{k:'rnd', l:'第几轮发出告警', ph:'数字', ans:p=>'3'}]},
+  {t:'认告警四要素', tag:'共性', k:'tap', need:4, see:'四个要素都点到。',
+   hint:'一条告警必须说清：哪个节点、什么故障、什么时候、建议怎么做。',
+   items:[
+    {t:'节点名', d:'哪台机器'},
+    {t:'故障类型', d:'不可达 / 端口关闭 / 延迟高'},
+    {t:'发生时间', d:'第几轮、几点'},
+    {t:'建议动作', d:'先查什么再查什么'}]},
+  {t:'写告警落盘代码（Python）', tag:'个性', k:'code',
+   see:'文件名和中文转义两个空都对。',
+   hint:'文件名填 alerts.json；告警里有中文，ensure_ascii 填 False。',
+   tt:['with open("{0}", "a", encoding="utf-8") as f:   # 告警追加到文件',
+       '    f.write(json.dumps(alert, ensure_ascii={1}) + "\\n")'],
+   fs:[
+    {k:'fn', l:'文件名', ph:'alerts.json', ans:p=>'alerts.json'},
+    {k:'ea', l:'ensure_ascii', ph:'False', ans:p=>'False'}]},
+  {t:'选出最该先做的处置', tag:'共性', k:'pick', mode:'one', see:'选“先查链路和电源，再查端口”。',
+   hint:'主机整台不可达时，先看链路和电源，不要一上来重启服务。',
+   opts:[
+    {t:'先查链路与电源，再查端口', ok:true},
+    {t:'直接重装系统', ok:false},
+    {t:'把所有告警都关掉', ok:false}]},
+  {t:'补全命令行参数（Python）', tag:'个性', k:'code',
+   see:'一次性运行、定时运行、默认间隔三个空都对。',
+   hint:'--once 填 once；--interval 填 interval；默认值就是你的巡检周期。',
+   tt:['parser.add_argument("--{0}", action="store_true")   # 只跑一次就退出',
+       'parser.add_argument("--{1}", type=int, default={2}) # 巡检间隔（秒）'],
+   fs:[
+    {k:'one', l:'一次性参数', ph:'once', ans:p=>'once'},
+    {k:'iv', l:'间隔参数', ph:'interval', ans:p=>'interval'},
+    {k:'df', l:'默认间隔（秒）', ph:'数字', ans:p=>String(p.gap)}]}
+ ],
+ rep:[
+  ['alarm','告警与防抖说明','写清为什么要连续两次才报警，你这份数据里哪台报了、哪台没报。','连续两次是为了防抖……'],
+  ['limit','已知局限','这套监控做不到什么，你会怎么补。','只能看可达性、端口和延迟，看不到业务指标……'],
+  ['mine','个性结论','带上你的节点数、周期、阈值说结论。','我管 __ 台，每 __ 秒巡检一次，阈值 __ ms']
+ ]
+}
+];
+
+const BOARDS = {
+ p1:{w:340,h:268,
+  nodes:[
+   {id:'nn-01',t:'nn-01',sub:'主节点',x:12,y:20,w:96,h:46,ports:[{id:'nic',x:60,y:66}]},
+   {id:'dn-01',t:'dn-01',sub:'数据节点',x:122,y:20,w:96,h:46,ports:[{id:'nic',x:170,y:66}]},
+   {id:'dn-02',t:'dn-02',sub:'数据节点',x:232,y:20,w:96,h:46,ports:[{id:'nic',x:280,y:66}]},
+   {id:'sw-01',t:'sw-01',sub:'交换机',x:110,y:190,w:120,h:44,ports:[{id:'p1',x:134,y:190},{id:'p2',x:170,y:190},{id:'p3',x:206,y:190}]}
+  ],
+  expect:[['nn-01:nic','sw-01:p1'],['dn-01:nic','sw-01:p2'],['dn-02:nic','sw-01:p3']]},
+ p2:{w:340,h:272,
+  nodes:[
+   {id:'net',t:'外网',sub:'Internet',x:12,y:26,w:84,h:44,ports:[{id:'r',x:96,y:48}]},
+   {id:'fw',t:'防火墙',sub:'fw-01',x:122,y:96,w:98,h:46,ports:[{id:'l',x:122,y:119},{id:'r',x:220,y:119}]},
+   {id:'srv',t:'服务器',sub:'svc-01',x:236,y:168,w:96,h:46,ports:[{id:'l',x:236,y:191}]}
+  ],
+  expect:[['net:r','fw:l'],['fw:r','srv:l']]}
+};
+
+function hashStr(str){
+  let h = 2166136261;
+  for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return Math.abs(h) % 2147483647;
+}
+function pidSeed(pid){
+  return hashStr(String(state.stu.id || state.stu.name || 'guest') + '|' + pid);
+}
+function personal(pid){
+  const s = pidSeed(pid);
+  if(pid === 'p1'){
+    const o = 20 + (s % 9);
+    const net = '10.20.' + o;
+    const lat = [30, 50, 60, 80][s % 4];
+    const bad = [['dn-01', 9870], ['dn-02', 8020], ['dn-01', 50070]][s % 3];
+    return {net:net, ips:[net+'.11', net+'.12', net+'.13'], gw:net+'.1', dns:net+'.2', lat:lat,
+      badHost:bad[0], badPort:String(bad[1]),
+      rows:[['我的网段', net + '.0/24'], ['三台机器', net + '.11 / .12 / .13'], ['网关 / DNS', net + '.1 / ' + net + '.2'],
+            ['延迟阈值', lat + ' ms'], ['故障注入', bad[0] + ' 的 ' + bad[1] + ' 端口未开放']]};
+  }
+  if(pid === 'p2'){
+    const rate = [10, 15, 20, 25][s % 4];
+    const win = [45, 60, 90][s % 3];
+    const size = [30, 50, 80][s % 3];
+    const brk = [25, 40, 60][s % 3];
+    return {rate:rate, window:win, size:size, brk:brk,
+      rows:[['放行网段', '10.20.30.0/24 → 22 / 8020 / 9870'], ['限流阈值', win + ' 秒内 ' + rate + ' 个新连接'], ['时间窗', win + ' 秒'],
+            ['传输文件', size + ' MB'], ['中断位置', brk + '% 处']]};
+  }
+  if(pid === 'p3'){
+    const items = 22 + (s % 7);
+    const gap = [1, 2, 3][s % 3];
+    const retry = 2 + (s % 2);
+    const pages = 2 + (s % 2);
+    return {items:items, gap:gap, retry:retry, pages:pages,
+      rows:[['抓取条数', items + ' 条'], ['请求间隔', gap + ' 秒'], ['失败重试', retry + ' 次'], ['翻页数', pages + ' 页']]};
+  }
+  if(pid === 'p4'){
+    const total = 1000 + (s % 5) * 100;
+    const win = [240, 300, 360][s % 3];
+    const thr = 100 + (s % 3) * 10;
+    const ratio = [25, 30, 35][s % 3];
+    const uv = 40 + (s % 12);
+    return {total:total, win:win, thr:thr, ratio:ratio, uv:uv,
+      rows:[['日志总量', total + ' 行（含 2 行坏数据）'], ['滑动窗口', win + ' 秒'],
+            ['突发阈值', win + ' 秒内 ' + thr + ' 次'], ['404 阈值', ratio + '%'], ['去重 IP', uv + ' 个']]};
+  }
+  const n = 4 + (s % 3);
+  const gap = [20, 30, 60][s % 3];
+  const lat = [150, 200, 250][s % 3];
+  return {n:n, gap:gap, lat:lat, confirm:2,
+    rows:[['节点数量', n + ' 台'], ['巡检周期', gap + ' 秒'], ['延迟阈值', lat + ' ms'], ['连续判定', '连续 2 次异常才报警']]};
+}
+
+function proj(pid){ return DATA.find(x=>x.id===pid); }
+function progOf(pid){ return state.prog[pid] || 0; }
+function allFields(){ return DATA.reduce((a,p)=>a+p.rep.length, 0); }
+function filledOf(pid){
+  const r = state.rep[pid] || {};
+  return proj(pid).rep.filter(x=>String(r[x[0]]||'').trim()).length;
+}
+function stuOk(){
+  if(!String(state.stu.id||'').trim()){ toast('先在首页填学号：你的专属数据要靠它生成'); location.hash='#/'; return false; }
+  return true;
+}
+function answerOf(f, p){
+  try{ return typeof f.ans === 'function' ? String(f.ans(p)) : String(f.ans); }catch(e){ return ''; }
+}
+function norm(v){ return String(v||'').replace(/\s+/g,'').replace(/，/g,',').toLowerCase(); }
+function fieldOK(f, v, p){
+  const raw = String(v||'').trim();
+  if(!raw) return false;
+  const want = answerOf(f, p);
+  if(norm(raw) === norm(want)) return true;
+  if(f.also && f.also.some(function(x){ return norm(raw) === norm(x); })) return true;
+  if(f.set){
+    const clean = function(t){ return norm(t).replace(/[\[\](){}"'`]/g,''); };
+    const a = clean(raw).split(/[,;、]/).filter(Boolean);
+    const b = clean(want).split(/[,;、]/).filter(Boolean);
+    if(a.length !== b.length) return false;
+    for(let k=0;k<a.length;k++){
+      if(String(Number(a[k])) !== String(Number(b[k]))) return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+function refresh(){
+  let f = 0;
+  DATA.forEach(p=>{ f += filledOf(p.id); });
+  document.getElementById('chip').textContent = '报告 ' + f + ' / ' + allFields() + ' 项';
+  DATA.forEach(p=>{
+    const bar = document.getElementById('bar-'+p.id);
+    const ct = document.getElementById('ct-'+p.id);
+    if(!bar || !ct) return;
+    const n = filledOf(p.id), all = p.rep.length, st = progOf(p.id);
+    bar.style.width = Math.round(st/p.steps.length*100) + '%';
+    ct.textContent = '步骤 ' + st + '/' + p.steps.length + ' · 报告 ' + n + '/' + all;
+  });
+}
+
+function cardsHTML(){
+  return DATA.map(p=>{
+    const st = progOf(p.id), n = filledOf(p.id);
+    const badge = st >= p.steps.length ? '实验完成' : (st > 0 ? '进行中' : '未开始');
+    return '<a class="pc" href="#/p/'+p.id+'">'
+      + '<div class="no">'+esc(p.no)+' · '+esc(p.score)+'</div>'
+      + '<h4>'+esc(p.title)+'</h4>'
+      + '<p>'+esc(p.intro)+'</p>'
+      + '<div class="st"><div class="bar"><i id="bar-'+p.id+'"></i></div><span class="ct" id="ct-'+p.id+'">步骤 '+st+'/'+p.steps.length+' · 报告 '+n+'/'+p.rep.length+'</span></div>'
+      + '<div class="tip">'+esc(badge)+'</div></a>';
+  }).join('');
+}
+
+/* ===== 画布 ===== */
+function boardHTML(pid){
+  const p = proj(pid);
+  if(!p.board || !BOARDS[p.board]) return '';
+  const b = BOARDS[p.board];
+  const links = state.links[pid] || [];
+  const need = (p.steps.find(s=>s.k==='wire')||{}).need || b.expect.length;
+  const lineHTML = links.map(function(l){
+    const a = portPos(b, l[0]), c = portPos(b, l[1]);
+    return '<line class="link" x1="'+a.x+'" y1="'+a.y+'" x2="'+c.x+'" y2="'+c.y+'"/>';
+  }).join('');
+  const probeIdx = p.steps.findIndex(s=>s.run==='probe');
+  const fixIdx = p.steps.findIndex(s=>s.k==='fix');
+  const fixDone = fixIdx >= 0 && progOf(pid) > fixIdx;
+  const probed = probeIdx >= 0 && !!((state.sim[pid]||{})[probeIdx]);
+  const badHost = (pid === 'p1' && probed) ? personal('p1').badHost : '';
+  const badPort = (pid === 'p1' && probed) ? personal('p1').badPort : '';
+  const portOpen = (state.closed && state.closed.p1) ? state.closed.p1.indexOf(badPort) < 0 : false;
+  const curIdx = progOf(pid);
+  const curStep = p.steps[curIdx];
+  const hots = (curStep && curStep.hot) ? curStep.hot : [];
+  const nodesHTML = b.nodes.map(function(n){
+    const isBad = n.id === badHost && !fixDone;
+    const isGood = n.id === badHost && fixDone;
+    const ports = n.ports.map(function(pt){
+      const used = links.some(function(l){ return l[0]===n.id+':'+pt.id || l[1]===n.id+':'+pt.id; });
+      return '<circle class="phit" cx="'+pt.x+'" cy="'+pt.y+'" r="22" data-n="'+n.id+'" data-p="'+pt.id+'"/>'
+        + '<circle class="port '+(used?'ok':'')+'" cx="'+pt.x+'" cy="'+pt.y+'" r="7" data-n="'+n.id+'" data-p="'+pt.id+'"/>';
+    }).join('');
+    let act = '';
+    let actTxt = '';
+    if(isBad){
+      act = ' data-a="'+(portOpen?'retest':'port')+'" data-i="'+fixIdx+'" data-p="'+badPort+'"';
+      actTxt = portOpen ? '点此复检' : '点此打开';
+    }
+    const sub = isBad ? (badPort + (portOpen ? ' 已开放' : ' 已关闭')) : n.sub;
+    const btn = isBad
+      ? '<g class="fixbadge"><rect x="'+(n.x+12)+'" y="'+(n.y+n.h+6)+'" width="'+(n.w-24)+'" height="28" rx="7"'+act+'/>'
+        + '<text x="'+(n.x+n.w/2)+'" y="'+(n.y+n.h+24)+'" text-anchor="middle"'+act+'>'+actTxt+'</text></g>'
+      : '';
+    const hot = hots.filter(function(h){ return h.node === n.id; })[0];
+    const hotBtn = hot
+      ? '<g class="hotbadge"><rect x="'+(n.x+8)+'" y="'+(n.y+n.h+6)+'" width="'+(n.w-16)+'" height="30" rx="8"'
+        + ' data-a="hot" data-i="'+curIdx+'" data-r="'+esc(curStep.run)+'"/>'
+        + '<text x="'+(n.x+n.w/2)+'" y="'+(n.y+n.h+25)+'" text-anchor="middle"'
+        + ' data-a="hot" data-i="'+curIdx+'" data-r="'+esc(curStep.run)+'">'+esc(hot.t)+'</text></g>'
+      : '';
+    return '<g class="node '+(isBad?'bad':(isGood?'good':''))+'">'
+      + '<rect x="'+n.x+'" y="'+n.y+'" width="'+n.w+'" height="'+n.h+'" rx="8"'+act+'/>'
+      + '<text x="'+(n.x+n.w/2)+'" y="'+(n.y+22)+'" text-anchor="middle"'+act+'>'+esc(n.t)+'</text>'
+      + '<text x="'+(n.x+n.w/2)+'" y="'+(n.y+37)+'" text-anchor="middle" opacity=".62"'+act+'>'+esc(sub)+'</text>'
+      + ports + '</g>' + btn + hotBtn;
+  }).join('');
+  return '<div class="board '+((probed && !fixDone) ? 'act' : '')+'"><svg viewBox="0 0 '+b.w+' '+b.h+'" role="img" aria-label="网络拓扑">'+lineHTML+nodesHTML+'</svg>'
+    + '<div class="bdline"><span>已连 '+links.length+' / '+need+' 条</span><span>'+((probed && !fixDone) ? '红色机器待修复' : '先点一端圆点，再点另一端')+'</span></div></div>';
+}
+function portPos(b, key){
+  const a = key.split(':');
+  const n = b.nodes.find(x=>x.id===a[0]);
+  const pt = n.ports.find(x=>x.id===a[1]);
+  return {x:pt.x, y:pt.y};
+}
+
+/* ===== 步骤 ===== */
+const SEL = {};
+let WSEL = null;
+
+function stepHTML(pid, i, st){
+  const s = st;
+  const done = i < progOf(pid);
+  const cur = i === progOf(pid);
+  const ans = (state.ans[pid]||{})[i];
+  const head = '<div class="sh"><span class="sn">'+(done?'✓':(i+1))+'</span><b>'+esc(s.t)+'</b>'
+    + '<span class="tg '+(s.tag==='个性'?'p':'')+'">'+esc(s.tag)+'</span>'
+    + (done?'<span class="lock">已完成</span>':(cur?'':'<span class="lock">完成上一步后解锁</span>'))+'</div>';
+  let body = '';
+  if(done){
+    body = '<div class="sd">'+esc(ans || '已完成')+'</div>';
+    const res = (state.sim[pid]||{})[i];
+    if(res) body += '<div class="out">' + resultHTML(res) + '</div>';
+  }else if(cur){
+    body = '<div class="sd"><b>怎么做：</b>'+esc(s.hint)+' <b>做到什么算完成：</b>'+esc(s.see)+'</div>' + taskHTML(pid, i, s);
+  }
+  return '<div class="step '+(done?'done':(cur?'cur':''))+'">'+head+body+'</div>';
+}
+
+function taskHTML(pid, i, s){
+  if(s.k === 'tap'){
+    const sel = SEL[pid+':'+i] || [];
+    return '<div class="chips">' + s.items.map(function(it, j){
+      return '<button class="chipbtn '+(sel.indexOf(j)>=0?'sel':'')+'" data-a="tap" data-i="'+i+'" data-j="'+j+'">'+esc(it.t)+'</button>';
+    }).join('') + '</div><div class="tip">已选 '+sel.length+' / '+s.need+'</div>';
+  }
+  if(s.k === 'wire'){
+    const need = s.need;
+    const n = (state.links[pid]||[]).length;
+    return '<div class="tip">在画布上：先点一端的小圆点，再点另一端。已连 '+n+' / '+need+'。</div>';
+  }
+  if(s.k === 'input'){
+    return '<div class="fields">' + s.fs.map(function(f){
+      return '<div class="f"><label>'+esc(f.l)+'</label><input class="inp" data-draft="'+i+':'+f.k+'" placeholder="'+esc(f.ph)+'" inputmode="text"></div>';
+    }).join('') + '</div><div class="row"><button class="sbtn" data-a="submit" data-i="'+i+'">提交检查</button></div>';
+  }
+  if(s.k === 'code'){
+    const lines = s.tt.map(function(line){
+      return line.split(/(\{\d+\})/).map(function(seg){
+        const m = seg.match(/^\{(\d+)\}$/);
+        if(!m) return esc(seg);
+        const f = s.fs[Number(m[1])] || {k:'x'+m[1], l:'空', ph:'__'};
+        return '<input data-draft="'+i+':'+f.k+'" inputmode="text" aria-label="'+esc(f.l)+'" placeholder="'+esc(f.ph||'__')+'" size="'+Math.max(6,String(f.ph||'').length)+'">';
+      }).join('');
+    }).join('\n');
+    return '<div class="code">'+lines+'</div><div class="row"><button class="sbtn" data-a="submit" data-i="'+i+'">提交检查</button></div>';
+  }
+  if(s.k === 'pick'){
+    const sel = SEL[pid+':'+i] || [];
+    return '<div>' + s.opts.map(function(o, j){
+      return '<button class="opt '+(sel.indexOf(j)>=0?'sel':'')+'" data-a="pick" data-i="'+i+'" data-j="'+j+'">'+esc(o.t)+'</button>';
+    }).join('') + '</div>';
+  }
+  if(s.k === 'order'){
+    const sel = SEL[pid+':'+i] || [];
+    return '<div>' + s.opts.map(function(o, j){
+      const at = sel.indexOf(j);
+      return '<button class="opt '+(at>=0?'sel':'')+'" data-a="order" data-i="'+i+'" data-j="'+j+'">'
+        + '<span class="ord">'+(at>=0?(at+1):'·')+'</span>'+esc(o.t)+'</button>';
+    }).join('') + '</div><div class="tip">按执行顺序点，先点的排最前；点完三条自动判定。</div>';
+  }
+  if(s.k === 'run'){
+    if(s.hot) return '<div class="tip"><b>这一步在拓扑图上做：</b>点上方图里节点下面的绿色按钮，这一屏没有按钮。</div><div class="out" id="out-'+i+'">还没开始，等你在图上点按钮。</div>';
+    return '<div class="row"><button class="sbtn" data-a="run" data-i="'+i+'">'+esc(s.btn)+'</button></div><div class="out" id="out-'+i+'">点上面的按钮开始。</div>';
+  }
+  if(s.k === 'fix'){
+    const p = personal('p1');
+    const closed = (state.closed && state.closed.p1) || [p.badPort];
+    const opened = closed.indexOf(p.badPort) < 0;
+    return '<div class="chips">' + ['22','8020','9870','50070'].map(function(pt){
+      const isClosed = closed.indexOf(pt) >= 0;
+      return '<span class="chipbtn off">'+pt+(isClosed?' 已关闭':' 已开放')+'</span>';
+    }).join('') + '</div>'
+      + '<div class="tip"><b>只在这里看状态，不在这里操作。</b>请回到上方拓扑图：'
+      + (opened ? '点红色机器下面的“点此复检”。' : '点红色机器下面的“点此打开”，打开后再点“点此复检”。')
+      + '</div>';
+  }
+  return '';
+}
+
+function solve(pid, i, val){
+  state.ans[pid] = state.ans[pid] || {};
+  state.ans[pid][i] = val;
+  state.prog[pid] = Math.max(progOf(pid), i + 1);
+  save();
+  toast('这一步完成，继续下一步');
+  render(pid);
+  const nx = proj(pid).steps[progOf(pid)];
+  if(nx && nx.k === 'fix'){
+    const bd = document.querySelector('.board');
+    if(bd && bd.scrollIntoView) bd.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+/* ===== 模拟 ===== */
+function simulate(pid, key){
+  const p = personal(pid);
+  if(pid === 'p1' && (key === 'probe' || key === 'retest')){
+    const hosts = ['nn-01','dn-01','dn-02'];
+    const lines = hosts.map(function(h, i){
+      const ip = p.ips[i];
+      if(key === 'retest' || h !== p.badHost) return h + ' ' + ip + '　正常（延迟 ' + (6 + i*3 + p.lat % 7) + ' ms）';
+      return h + ' ' + ip + '　异常：端口 ' + p.badPort + ' 未开放';
+    });
+    return {lines:lines};
+  }
+  if(pid === 'p2' && key === 'test'){
+    return {lines:[
+      '运维网段访问 22 端口 —— 允许（命中白名单）',
+      '来源 0.0.0.0/0 访问 9870 端口 —— 拒绝（不在白名单）',
+      '同一来源在 '+p.window+' 秒内新建第 '+(p.rate+1)+' 个连接 —— 限流',
+      '已建会话继续传输 —— 放行（ESTABLISHED 规则优先）']};
+  }
+  if(pid === 'p2' && key === 'rate'){
+    return {lines:[
+      '同源连续新建 30 次，窗口 '+p.window+' 秒，阈值 '+p.rate+' 个',
+      '第 1—'+p.rate+' 次：放行',
+      '第 '+(p.rate+1)+' 次起：限流，返回 429，已建会话不受影响']};
+  }
+  if(pid === 'p2' && key === 'resume'){
+    return {lines:[
+      '文件共 '+p.size+' MB，传到 '+p.brk+'% 时网络中断',
+      '记录已传偏移：' + Math.round(p.size * p.brk) / 100 + ' MB 处',
+      '续传从该偏移继续，总字节与源文件一致，没有重传整份']};
+  }
+  if(pid === 'p3' && key === 'fetch'){
+    const rows = [];
+    for(let k=0;k<p.items;k++){
+      rows.push(['通知公告 '+(k+1), '2026-09-'+('0'+((k%28)+1)).slice(-2), '/news/'+(1000+k)+'.html']);
+    }
+    return {lines:['按你的参数抓取：共 '+p.items+' 条，每次间隔 '+p.gap+' 秒', '字段：标题 / 发布时间 / 链接 / 摘要'], table:{head:['标题','发布时间','链接'], rows:rows}};
+  }
+  if(pid === 'p3' && key === 'check'){
+    return {lines:['四条字段完整率 100%','空值 0 条，重复 0 条','可以存成 JSON 和 CSV']};
+  }
+  if(pid === 'p4' && key === 'load'){
+    return {lines:['日志总量 '+p.total+' 行，其中坏行 2 行','有效 '+(p.total-2)+' 行，解析失败 2 行（已计数，没有丢弃）','PV='+(p.total-2)+'，UV='+p.uv+'（按源 IP 去重）']};
+  }
+  if(pid === 'p4' && key === 'anom'){
+    return {lines:[
+      '172.31.8.'+(9+(pidSeed(pid)%10))+'　'+p.win+' 秒内 '+(p.thr+50)+' 次，超过阈值 '+p.thr+' → 疑似刷接口',
+      '203.0.113.'+(7+(pidSeed(pid)%10))+'　404 占比 '+(p.ratio+5)+'%，超过阈值 '+p.ratio+'% → 扫描探测',
+      '198.51.100.'+(20+(pidSeed(pid)%10))+'　登录失败 7 次 → 疑似撞库']};
+  }
+  if(pid === 'p4' && key === 'chart'){
+    const total = p.total;
+    const trend = [0.18, 0.52, 0.92, 0.78, 0.46, 0.14].map(function(x){ return Math.round(total * x / 6); });
+    const urls = ['/news/','/api/login','/index.html','/search','/detail/1024','/api/user','/static/app.js','/news/2','/help','/about'];
+    const uv2 = [0.26, 0.19, 0.14, 0.11, 0.09, 0.07, 0.06, 0.04, 0.03, 0.01];
+    const ok = Math.round(total * 0.86);
+    const nf = Math.round(total * 0.11);
+    return {
+      lines:[
+        '已生成 4 张图：PV 趋势、Top10 URL、状态码分布、异常来源',
+        '趋势图：访问高峰在 09:00—11:00，夜间基本归零',
+        'Top10 URL：/news/ 与 /api/login 排前两位，其余是详情页和静态资源',
+        '状态码：200 占多数，404 次之（扫描），500 少量（服务异常）'],
+      charts:[
+        {t:'PV 按小时变化趋势', type:'line', labels:['08时','10时','12时','14时','16时','18时'], values:trend},
+        {t:'访问最多的 10 个 URL', type:'hbar', labels:urls, values:uv2.map(function(x){ return Math.round(total * x); })},
+        {t:'状态码分布', type:'bar', labels:['200','404','500'], values:[ok, nf, total - ok - nf]},
+        {t:'异常来源分类（次数）', type:'bar', labels:['同IP高频','404扫描','登录失败'], values:[p.thr + 50, p.ratio + 5, 7]}
+      ]};
+  }
+  if(pid === 'p5' && key === 'patrol'){
+    const n = p.n, hosts = [];
+    hosts.push('nn-01');
+    for(let i=1;i<n;i++) hosts.push('dn-0'+i);
+    const lines = [];
+    for(let r=1;r<=3;r++){
+      const parts = hosts.map(function(h, i){
+        if(i === 1) return h + (r >= 2 ? ' 不可达（第 '+(r-1)+' 次）' : ' 正常');
+        if(i === 2 && r >= 2) return h + ' 端口 8020 关闭（第 '+(r-1)+' 次）';
+        if(i === 3 && r === 3) return h + ' 延迟 '+(p.lat+40)+' ms（超阈值）';
+        return h + ' 正常';
+      });
+      lines.push('第 '+r+' 轮（'+p.gap+' 秒一次）：'+parts.join('；'));
+    }
+    lines.push('第 3 轮结束：dn-01 连续 2 次异常 → 发出 1 条告警（含节点、类型、时间、建议）');
+    return {lines:lines};
+  }
+  return {lines:['没有可展示的结果']};
+}
+
+function chartSVG(c){
+  const w = 300;
+  const n = c.labels.length;
+  const max = Math.max.apply(null, c.values.concat([1]));
+  let h = 116, body = '';
+  if(c.type === 'hbar'){
+    h = 14 + 15 * n;
+    const labW = 104, barMax = w - labW - 34;
+    body = c.values.map(function(v, k){
+      const y = 8 + 15 * k, bw = Math.max(2, (v / max) * barMax);
+      return '<text x="2" y="' + (y + 10) + '" font-size="8" fill="#3d4649">' + esc(c.labels[k]) + '</text>'
+        + '<rect x="' + labW + '" y="' + y + '" width="' + bw + '" height="9" rx="2" fill="#10635a" opacity=".85"/>'
+        + '<text x="' + (labW + bw + 4) + '" y="' + (y + 9) + '" font-size="7.5" fill="#6b7477">' + esc(v) + '</text>';
+    }).join('');
+  }else{
+    const top = 14, bottom = 26, left = 8, right = 8, plotH = h - top - bottom;
+    if(c.type === 'line'){
+      const step = (w - left - right) / (n - 1 || 1);
+      const pts = c.values.map(function(v, k){
+        return (left + step * k) + ',' + (top + plotH - (v / max) * plotH);
+      });
+      body = '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#10635a" stroke-width="2"/>'
+        + c.values.map(function(v, k){
+          return '<circle cx="' + (left + step * k) + '" cy="' + (top + plotH - (v / max) * plotH) + '" r="2.6" fill="#10635a"/>';
+        }).join('')
+        + c.labels.map(function(l, k){
+          return '<text x="' + (left + step * k) + '" y="' + (h - 8) + '" font-size="8" fill="#6b7477" text-anchor="middle">' + esc(l) + '</text>';
+        }).join('');
+    }else{
+      const gap = 10, bw = (w - left - right - gap * (n - 1)) / n;
+      body = c.values.map(function(v, k){
+        const bh = Math.max(2, (v / max) * plotH), x = left + (bw + gap) * k;
+        return '<rect x="' + x + '" y="' + (top + plotH - bh) + '" width="' + bw + '" height="' + bh + '" rx="2" fill="#10635a" opacity=".85"/>'
+          + '<text x="' + (x + bw / 2) + '" y="' + (top + plotH - bh - 3) + '" font-size="7.5" fill="#3d4649" text-anchor="middle">' + esc(v) + '</text>';
+      }).join('')
+        + c.labels.map(function(l, k){
+          return '<text x="' + (left + (bw + gap) * k + bw / 2) + '" y="' + (h - 8) + '" font-size="8" fill="#6b7477" text-anchor="middle">' + esc(l) + '</text>';
+        }).join('');
+    }
+  }
+  return '<div class="chart"><div class="ct">' + esc(c.t) + '</div>'
+    + '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + esc(c.t) + '">' + body + '</svg></div>';
+}
+function resultHTML(res){
+  let html = res.lines.map(function(x){ return '<div>'+esc(x)+'</div>'; }).join('');
+  if(res.table){
+    html += '<table><tr>'+res.table.head.map(function(h){ return '<th>'+esc(h)+'</th>'; }).join('')+'</tr>'
+      + res.table.rows.map(function(r){ return '<tr>'+r.map(function(c){ return '<td>'+esc(c)+'</td>'; }).join('')+'</tr>'; }).join('') + '</table>';
+  }
+  if(res.charts) html += res.charts.map(chartSVG).join('');
+  return html;
+}
+function drawResult(i, res){
+  const box = document.getElementById('out-'+i);
+  if(box) box.innerHTML = resultHTML(res);
+}
+function doRun(pid, i, key){
+  if(!key){ toast('这个按钮还没配置动作，检查一下'); return; }
+  const box = document.getElementById('out-'+i);
+  if(box) box.textContent = '正在运行…';
+  setTimeout(function(){
+    const res = simulate(pid, key);
+    state.sim[pid] = state.sim[pid] || {};
+    state.sim[pid][i] = res;
+    drawResult(i, res);
+    solve(pid, i, res.lines[0] + (res.lines.length>1 ? '（共 '+res.lines.length+' 条结果）' : ''));
+  }, 700);
+}
+
+/* ===== 主视图 ===== */
+let CUR = null;
+function render(pid){
+  const p = proj(pid);
+  CUR = pid;
+  const pp = personal(pid);
+  const steps = p.steps.map(function(s, i){ return stepHTML(pid, i, s); }).join('');
+  const rep = p.rep.map(function(f){
+    const v = (state.rep[pid]||{})[f[0]] || '';
+    return '<div class="rf"><label for="rf-'+f[0]+'">'+esc(f[1])+'</label><div class="tip">'+esc(f[2])+'</div>'
+      + '<textarea id="rf-'+f[0]+'" data-rep="'+f[0]+'" placeholder="'+esc(f[3])+'">'+esc(v)+'</textarea></div>';
+  }).join('');
+  const done = progOf(pid) >= p.steps.length;
+  document.getElementById('pbody').innerHTML = `
+  <div class="phead">
+    <div class="no" style="font-size:11.5px;color:#10635a;letter-spacing:.08em">${esc(p.no)} · ${esc(p.score)}</div>
+    <h2>${esc(p.title)}</h2>
+    <p>${esc(p.intro)}</p>
+    <div class="acts"><button class="sbtn g" data-a="resetp">重新做本实验</button></div>
+  </div>
+
+  ${boardHTML(pid)}
+
+  <div class="card">
+    <h3>我的专属数据 <span class="s">按学号生成，换人即换</span></h3>
+    <table class="kv"><colgroup><col><col></colgroup><tbody>
+      ${pp.rows.map(function(r){ return '<tr><th>'+esc(r[0])+'</th><td>'+esc(r[1])+'</td></tr>'; }).join('')}
+    </tbody></table>
+    <div class="tip">这些数字就是你要填、要用的值。学号不填，不许开始操作。</div>
+  </div>
+
+  <div class="card">
+    <h3>动手做：${p.steps.length} 小步 <span class="s">${done?'全部完成，去写结论并导出':'做完一步自动解锁下一步'}</span></h3>
+    ${steps}
+  </div>
+
+  <div class="card">
+    <h3>写结论（${p.rep.length} 项） <span class="s">写完就能导出报告</span></h3>
+    ${rep}
+  </div>
+
+  <div class="card">
+    <h3>导出实验报告</h3>
+    <div class="acts">
+      <button class="sbtn" data-a="export">生成实验报告</button>
+      <button class="sbtn g" data-a="download">下载报告文件</button>
+      <button class="sbtn g" data-a="copy">复制报告文字</button>
+    </div>
+    <div class="tip">报告含：任务与条件、你的专属数据、每一步的操作记录、模拟结果、结论与签名栏。生成后可直接打印或另存 PDF。</div>
+    <div class="acts">
+      <button class="sbtn g" data-a="resetp">重新做这个实验（清空本实验记录）</button>
+    </div>
+  </div>`;
+  refresh();
+  const s = p.steps[progOf(pid)];
+  if(s && s.k === 'run'){
+    const box = document.getElementById('out-'+progOf(pid));
+    if(box) box.textContent = '点上面的按钮开始。';
+  }
+}
+
+/* ===== 报告 ===== */
+function reportHTML(pid, brk){
+  const p = proj(pid);
+  const pp = personal(pid);
+  const r = state.rep[pid] || {};
+  const rows = p.steps.map(function(s, i){
+    const a = (state.ans[pid]||{})[i];
+    return '<tr><td>'+(i+1)+'. '+esc(s.t)+'</td><td>'+(a?'已完成':'未完成')+'</td><td>'+esc(a||'—')+'</td></tr>';
+  }).join('');
+  const sims = Object.keys(state.sim[pid]||{}).map(function(k){
+    const res = state.sim[pid][k];
+    return '<div style="margin:6px 0">'+res.lines.map(function(x){ return '<div>'+esc(x)+'</div>'; }).join('')+'</div>';
+  }).join('');
+  const fields = p.rep.map(function(f){
+    const v = String(r[f[0]]||'').trim();
+    return '<div class="sec"><div class="sl">'+esc(f[1])+'</div>'
+      + (v?'<div class="sv">'+esc(v).replace(/\n/g,'<br>')+'</div>':'<div class="sv none">（未填写）</div>') + '</div>';
+  }).join('');
+  return `<section${brk?' style="page-break-before:always"':''}>
+   <div class="rh"><div class="no">${esc(p.no)}</div><h2>${esc(p.title)}</h2>
+     <div class="rm">学号 ${esc(state.stu.id||'')}　姓名 ${esc(state.stu.name||'')}${state.stu.cls?'　'+esc(state.stu.cls):''}　${esc(p.score)}　${new Date().toLocaleDateString('zh-CN')}</div></div>
+   <h3>一、实验任务与给定条件</h3><p>${esc(p.intro)}</p>
+   <h3>二、我的专属数据（按学号生成）</h3>
+   <table class="t"><tr><th style="width:30%">参数</th><th>取值</th></tr>
+     ${pp.rows.map(function(x){ return '<tr><td>'+esc(x[0])+'</td><td>'+esc(x[1])+'</td></tr>'; }).join('')}</table>
+   <h3>三、操作记录</h3>
+   <table class="t"><tr><th style="width:38%">步骤</th><th style="width:14%">状态</th><th>我的操作与结果</th></tr>${rows}</table>
+   <h3>四、模拟运行结果</h3>${sims || '<p>（还没有运行结果）</p>'}
+   <h3>五、分析与结论</h3>${fields}
+   <div class="sign">学生签名：________________　　日期：___________</div>
+  </section>`;
+}
+function reportDoc(body, title){
+  return '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>'+esc(title)+'</title>'
+  + '<meta name="viewport" content="width=device-width,initial-scale=1"><style>'
+  + 'body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;max-width:820px;margin:0 auto;padding:20px 16px 48px;color:#22282a;line-height:1.75;font-size:15px;background:#fff}'
+  + 'h1{font-size:22px;text-align:center;margin:0 0 4px}h2{font-size:19px;margin:0 0 4px}h3{font-size:15px;margin:20px 0 6px;padding-bottom:4px;border-bottom:1px solid #e2e2dc}'
+  + '.sub{text-align:center;font-size:12.5px;color:#666;margin-bottom:18px}.rh{border-bottom:2px solid #10635a;padding-bottom:8px;margin-bottom:12px}'
+  + '.no{font-size:12px;color:#10635a;letter-spacing:.1em}.rm{font-size:12.5px;color:#666;margin-top:4px}'
+  + 'table.t{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px;table-layout:fixed}'
+  + 'table.t th,table.t td{border:1px solid #d8d8d0;padding:6px 8px;vertical-align:middle;word-break:break-word}'
+  + 'table.t th{background:#efeee8;text-align:center}'
+  + '.sec{margin:12px 0}.sl{font-weight:600;color:#10635a;font-size:14px}.sv{font-size:14px;margin-top:3px}.none{color:#999}'
+  + '.sign{margin-top:28px;font-size:13px;color:#444}.btn{position:fixed;right:16px;bottom:16px;min-height:44px;padding:0 18px;border:0;border-radius:8px;background:#10635a;color:#fff;font-size:15px}'
+  + '@media print{.btn{display:none}body{padding:0}}'
+  + '</style></head><body><h1>计算机网络应用（53690）实验报告</h1><div class="sub">国家开放大学考试改革试点课程 · 湖北开放大学人工智能学院</div>'
+  + body + '<button class="btn" onclick="window.print()">打印 / 存为 PDF</button></body></html>';
+}
+function safeName(s){ return String(s||'学生').replace(/[\\/:*?"<>|\s]/g,'_'); }
+function openReport(html, fn){
+  const w = window.open('', '_blank');
+  if(!w){ toast('浏览器拦了新窗口，用“下载报告文件”吧'); return; }
+  w.document.open(); w.document.write(html); w.document.close(); w.document.title = fn;
+}
+function downloadReport(html, fn){
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = fn;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1200);
+}
+function copyText(pid){
+  const p = proj(pid);
+  const r = state.rep[pid] || {};
+  const txt = p.no + '　' + p.title + '\n学号：'+state.stu.id+'　姓名：'+state.stu.name+'\n\n'
+    + p.intro + '\n\n【专属数据】\n' + personal(pid).rows.map(function(x){ return x[0]+'：'+x[1]; }).join('\n')
+    + '\n\n【操作记录】\n' + p.steps.map(function(s,i){ return (i+1)+'. '+s.t+'：'+((state.ans[pid]||{})[i]||'未完成'); }).join('\n')
+    + '\n\n【结论】\n' + p.rep.map(function(f){ return f[1]+'：\n'+(String(r[f[0]]||'').trim()||'（未填写）'); }).join('\n\n');
+  const done = ok => toast(ok?'已复制，可粘到 Word':'复制失败，请长按选择文字');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>done(true), ()=>done(false));
+  }else{
+    const ta = document.createElement('textarea'); ta.value = txt;
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(true); }catch(e){ done(false); }
+    ta.remove();
+  }
+}
+
+/* ===== 交互 ===== */
+function handleClick(e){
+  const el = e.target.closest('[data-a]');
+  if(!el) return;
+  const act = el.getAttribute('data-a');
+  if(act === 'resetall'){
+    if(!confirm('清空五个实验的全部步骤和报告记录？学号、姓名会保留。')) return;
+    state.prog = {}; state.ans = {}; state.links = {}; state.sim = {}; state.rep = {}; state.closed = {};
+    Object.keys(SEL).forEach(function(k){ delete SEL[k]; });
+    WSEL = null;
+    save();
+    location.hash = '#/';
+    if(typeof goHome === 'function') goHome();
+    toast('已清空，可以从第一个实验重新开始');
+    return;
+  }
+  const pid = CUR;
+  if(!pid) return;
+  const i = Number(el.getAttribute('data-i'));
+  const p = proj(pid);
+  const s = p.steps[i];
+
+  if(act === 'resetp'){
+    if(!confirm('重新做这个实验？本实验的步骤记录、模拟结果和已填结论都会清空。')) return;
+    delete state.prog[pid];
+    delete state.ans[pid];
+    delete state.links[pid];
+    delete state.sim[pid];
+    delete state.rep[pid];
+    if(state.closed) delete state.closed.p1;
+    Object.keys(SEL).forEach(function(k){ delete SEL[k]; });
+    WSEL = null;
+    save();
+    render(pid);
+    toast('已重置，从第 1 步重新开始');
+    return;
+  }
+
+  if(act === 'tap'){
+    if(!stuOk()) return;
+    const j = Number(el.getAttribute('data-j'));
+    const key = pid+':'+i;
+    const sel = SEL[key] || (SEL[key] = []);
+    const at = sel.indexOf(j);
+    if(at >= 0) sel.splice(at,1); else sel.push(j);
+    el.classList.toggle('sel');
+    const bad = sel.some(function(x){ return s.items[x] && s.items[x].ok === false; });
+    if(bad){ toast('这一项不是这个任务的答案，再想想'); }
+    if(sel.length === s.need && !bad){
+      const picked = sel.map(function(x){ return s.items[x].t; });
+      solve(pid, i, picked.join('、'));
+      SEL[key] = [];
+    }else if(sel.length > s.need){
+      toast('选多了，只选 '+s.need+' 个');
+    }
+    return;
+  }
+  if(act === 'pick'){
+    if(!stuOk()) return;
+    const j = Number(el.getAttribute('data-j'));
+    const key = pid+':'+i;
+    if(s.mode === 'one'){
+      if(s.opts[j].ok){ solve(pid, i, s.opts[j].t); }
+      else { el.classList.add('bad'); toast('不对，看看提示再选'); }
+      return;
+    }
+    const sel = SEL[key] || (SEL[key] = []);
+    const at = sel.indexOf(j);
+    if(at >= 0) sel.splice(at,1); else sel.push(j);
+    el.classList.toggle('sel');
+    const okCount = sel.filter(function(x){ return s.opts[x] && s.opts[x].ok; }).length;
+    const badCount = sel.length - okCount;
+    const need = s.opts.filter(function(o){ return o.ok; }).length;
+    if(badCount > 0){ toast('选到了不该选的项，取消它'); }
+    if(okCount === need && badCount === 0){
+      solve(pid, i, s.opts.filter(function(o){ return o.ok; }).map(function(o){ return o.t; }).join('；'));
+      SEL[key] = [];
+    }
+    return;
+  }
+  if(act === 'order'){
+    if(!stuOk()) return;
+    const j = Number(el.getAttribute('data-j'));
+    const key = pid+':'+i;
+    const sel = SEL[key] || (SEL[key] = []);
+    if(sel.indexOf(j) >= 0){ toast('这条已经排进去了，换一条'); return; }
+    sel.push(j);
+    if(sel.length >= s.opts.length){
+      const pEst = sel.indexOf(0), pWhite = sel.indexOf(1), pDrop = sel.indexOf(2);
+      if(pEst >= 0 && pWhite >= 0 && pDrop >= 0 && pEst < pDrop && pWhite < pDrop){
+        solve(pid, i, '执行顺序：' + sel.map(function(x){ return s.opts[x].t; }).join(' → '));
+        SEL[key] = [];
+      }else{
+        SEL[key] = [];
+        toast('顺序不对：“其余全部拒绝”必须放最后，重新点一遍');
+        render(pid);
+      }
+    }else{
+      render(pid);
+    }
+    return;
+  }
+  if(act === 'submit'){
+    if(!stuOk()) return;
+    const bad = [];
+    s.fs.forEach(function(f){
+      const inp = document.querySelector('[data-draft="'+i+':'+f.k+'"]');
+      if(!fieldOK(f, inp ? inp.value : '', personal(pid))) bad.push(f.l);
+    });
+    if(bad.length){ toast('还有空不对：' + bad.join('、') + '。按空里的灰字例子填'); return; }
+    const vals = s.fs.map(function(f){
+      const inp = document.querySelector('[data-draft="'+i+':'+f.k+'"]');
+      return f.l + '=' + (inp ? inp.value : '');
+    });
+    solve(pid, i, vals.join('，'));
+    return;
+  }
+  if(act === 'run'){
+    if(!stuOk()) return;
+    el.disabled = true;
+    doRun(pid, i, s.run);
+    return;
+  }
+  if(act === 'hot'){
+    if(!stuOk()) return;
+    doRun(pid, i, el.getAttribute('data-r'));
+    return;
+  }
+  if(act === 'port'){
+    if(!stuOk()) return;
+    const pt = el.getAttribute('data-p');
+    const p1 = personal('p1');
+    if(pt !== p1.badPort){ toast('其他端口本来就是正常的，只需要处理巡检报错的那个'); return; }
+    state.closed = state.closed || {};
+    const closed = state.closed.p1 || [p1.badPort];
+    if(closed.indexOf(pt) >= 0){
+      closed.splice(closed.indexOf(pt), 1);
+      state.closed.p1 = closed;
+      save();
+      render(pid);
+      toast('端口已打开，但还不能算修好，请点“复检这台机器”');
+    }else{
+      toast('这个端口已经打开了，点下面的“复检这台机器”看结果');
+    }
+    return;
+  }
+  if(act === 'retest'){
+    if(!stuOk()) return;
+    const p1 = personal('p1');
+    const closed = (state.closed && state.closed.p1) || [p1.badPort];
+    if(closed.indexOf(p1.badPort) >= 0){ toast('端口还没打开，先把报错的那个端口打开'); return; }
+    const res = simulate('p1', 'retest');
+    state.sim[pid] = state.sim[pid] || {};
+    state.sim[pid][i] = res;
+    solve(pid, i, '打开 ' + p1.badHost + ' 的 ' + p1.badPort + ' 端口后复检：三台机器全部正常');
+    return;
+  }
+  if(act === 'export'){
+    if(!stuOk()) return;
+    if(!state.stu.name){ toast('先填姓名，报告要签名'); return; }
+    openReport(reportDoc(reportHTML(pid,false), p.title+' 实验报告'), safeName(state.stu.id)+'_'+safeName(state.stu.name)+'_'+p.title+'.html');
+    return;
+  }
+  if(act === 'download'){
+    if(!stuOk()) return;
+    if(!state.stu.name){ toast('先填姓名，报告要签名'); return; }
+    downloadReport(reportDoc(reportHTML(pid,false), p.title+' 实验报告'), safeName(state.stu.id)+'_'+safeName(state.stu.name)+'_'+p.title+'.html');
+    toast('报告已下载，用浏览器打开即可打印');
+    return;
+  }
+  if(act === 'copy'){
+    copyText(pid);
+    return;
+  }
+}
+function handlePort(e){
+  const c = e.target.closest('.port, .phit');
+  if(!c) return;
+  const pid = CUR;
+  if(!pid || !BOARDS[proj(pid).board]) return;
+  const i = progOf(pid);
+  const s = proj(pid).steps[i];
+  if(!s || s.k !== 'wire'){ return; }
+  if(!stuOk()) return;
+  const key = c.getAttribute('data-n') + ':' + c.getAttribute('data-p');
+  const links = state.links[pid] || [];
+  const used = links.some(function(l){ return l[0]===key || l[1]===key; });
+  if(used){ toast('这个小圆点已经连过线了'); return; }
+  if(!WSEL){ WSEL = key; c.classList.add('sel'); toast('再点另一端，把线连起来'); return; }
+  if(WSEL === key){ WSEL = null; c.classList.remove('sel'); return; }
+  const a = WSEL, b = key;
+  const expect = BOARDS[proj(pid).board].expect;
+  const pairOk = expect.some(function(x){ return (x[0]===a&&x[1]===b) || (x[1]===a&&x[0]===b); })
+    || ((a.indexOf('sw-01:')===0 && b.indexOf(':nic')>=0) || (b.indexOf('sw-01:')===0 && a.indexOf(':nic')>=0));
+  if(!pairOk){
+    toast('这两根线不该连：主机接交换机，按提示的顺序连');
+    WSEL = null;
+    document.querySelectorAll('.port.sel').forEach(function(x){ x.classList.remove('sel'); });
+    return;
+  }
+  WSEL = null;
+  state.links[pid] = links.concat([[a, b]]);
+  save();
+  if(state.links[pid].length >= s.need){
+    solve(pid, i, '完成连线 '+state.links[pid].length+' 条：' + state.links[pid].map(function(x){ return x[0].replace(':', ' → '); }).join('；'));
+  }else{
+    render(pid);
+    toast('已连 '+state.links[pid].length+' / '+s.need);
+  }
+}
+
+/* ===== 路由与初始化 ===== */
+function goHome(){
+  document.getElementById('viewHome').hidden = false;
+  document.getElementById('viewProject').hidden = true;
+  document.getElementById('btnBack').hidden = true;
+  CUR = null;
+  document.getElementById('cardList').innerHTML = cardsHTML();
+  refresh();
+}
+function route(){
+  const m = location.hash.match(/^#\/p\/(p\d)/);
+  if(m && DATA.some(p=>p.id===m[1])){
+    document.getElementById('viewHome').hidden = true;
+    document.getElementById('viewProject').hidden = false;
+    document.getElementById('btnBack').hidden = false;
+    render(m[1]);
+    window.scrollTo(0,0);
+  }else{
+    goHome();
+  }
+}
+function init(){
+  load();
+  const sid = document.getElementById('sid'), snm = document.getElementById('snm'), scl = document.getElementById('scl');
+  sid.value = state.stu.id || ''; snm.value = state.stu.name || ''; scl.value = state.stu.cls || '';
+  function sync(){
+    state.stu.id = sid.value.trim();
+    state.stu.name = snm.value.trim();
+    state.stu.cls = scl.value.trim();
+    save();
+    document.getElementById('saveTip').textContent = state.stu.id ? '已保存：' + state.stu.id + (state.stu.name?'（'+state.stu.name+'）':'') + '。换学号会换一整套数据。' : '填完自动存在本机，下次打开还在。';
+    refresh();
+    if(CUR) render(CUR);
+  }
+  [sid,snm,scl].forEach(function(x){ x.addEventListener('input', sync); });
+  document.getElementById('btnBack').addEventListener('click', function(){ location.hash = '#/'; });
+  const body = document.getElementById('pbody');
+  body.addEventListener('click', function(e){
+    handlePort(e);
+    handleClick(e);
+  });
+  document.getElementById('viewHome').addEventListener('click', handleClick);
+  body.addEventListener('input', function(e){
+    const t = e.target.closest('[data-rep]');
+    if(t && CUR){
+      state.rep[CUR] = state.rep[CUR] || {};
+      state.rep[CUR][t.getAttribute('data-rep')] = t.value;
+      save();
+      refresh();
+    }
+  });
+  window.addEventListener('hashchange', route);
+  if(!state.closed) state.closed = {};
+  refresh();
+  route();
+}
+init();
+</script>
+</body>
+</html>
