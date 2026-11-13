@@ -1009,10 +1009,11 @@ function render(pid){
     <h3>导出实验报告</h3>
     <div class="acts">
       <button class="sbtn" data-a="export">生成实验报告</button>
+      <button class="sbtn g" data-a="dldoc">下载 Word 版（手机推荐）</button>
       <button class="sbtn g" data-a="download">下载报告文件</button>
       <button class="sbtn g" data-a="copy">复制报告文字</button>
     </div>
-    <div class="tip">报告含：任务与条件、你的专属数据、每一步的操作记录、模拟结果、结论与签名栏。生成后可直接打印或另存 PDF。</div>
+    <div class="tip">报告含：任务与条件、你的专属数据、每一步的操作记录、模拟结果、结论与签名栏。<b>手机导出：</b>点“下载 Word 版”，用 WPS 打开后另存为 PDF；电脑上可直接打印。</div>
     <div class="acts">
       <button class="sbtn g" data-a="resetp">重新做这个实验（清空本实验记录）</button>
     </div>
@@ -1068,16 +1069,50 @@ function reportDoc(body, title){
   + 'table.t th,table.t td{border:1px solid #d8d8d0;padding:6px 8px;vertical-align:middle;word-break:break-word}'
   + 'table.t th{background:#efeee8;text-align:center}'
   + '.sec{margin:12px 0}.sl{font-weight:600;color:#10635a;font-size:14px}.sv{font-size:14px;margin-top:3px}.none{color:#999}'
-  + '.sign{margin-top:28px;font-size:13px;color:#444}.btn{position:fixed;right:16px;bottom:16px;min-height:44px;padding:0 18px;border:0;border-radius:8px;background:#10635a;color:#fff;font-size:15px}'
-  + '@media print{.btn{display:none}body{padding:0}}'
+  + '.sign{margin-top:28px;font-size:13px;color:#444}'
+  + '.bar{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid #e4e4dd}'
+  + '.bar button{flex:1;min-height:46px;border-radius:8px;border:1px solid #10635a;background:#10635a;color:#fff;font-size:15px}'
+  + '.bar button.alt{background:#fff;color:#10635a}'
+  + '.hint{margin:18px 0 104px;padding:10px 12px;background:#f1f6f4;border-left:3px solid #10635a;font-size:12.5px;line-height:1.75;color:#39423f}'
+  + '@media print{.bar,.hint{display:none}body{padding:0;margin:0}}'
   + '</style></head><body><h1>计算机网络应用（53690）实验报告</h1><div class="sub">国家开放大学考试改革试点课程 · 湖北开放大学人工智能学院</div>'
-  + body + '<button class="btn" onclick="window.print()">打印 / 存为 PDF</button></body></html>';
+  + '<div id="rp">' + body + '</div>'
+  + '<div class="hint"><b>手机导出提示</b><br>① 安卓手机、微信内置浏览器点“打印 / 存为 PDF”常常没反应，请改点左侧<b>“下载 Word 版”</b>，用 WPS 打开后另存为 PDF；<br>② 苹果手机：点浏览器底部<b>分享</b> → 打印 → 预览后再“存储为 PDF”；<br>③ 微信里打开：先点右上角 ··· → 在浏览器打开，再按上面步骤操作。</div>'
+  + '<div class="bar"><button class="alt" id="btnDoc">下载 Word 版（.doc）</button><button id="btnPrint">打印 / 存为 PDF</button></div>'
+  + '</body></html>';
+}
+function wordDoc(body, title){
+  return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'
+  + '<head><meta charset="utf-8"><title>'+esc(title)+'</title>'
+  + '<style>@page{size:A4;margin:2cm 2cm}body{font-family:"Microsoft YaHei",SimSun,serif;font-size:12pt;line-height:1.7;color:#000}'
+  + 'h1{font-size:16pt;text-align:center;margin:0 0 6pt}h2{font-size:14pt;margin:0 0 4pt}h3{font-size:12pt;margin:12pt 0 4pt;border-bottom:1px solid #999;padding-bottom:2pt}'
+  + 'table{border-collapse:collapse;width:100%;font-size:10.5pt}td,th{border:1px solid #666;padding:4pt 6pt;vertical-align:middle}th{background:#eee}'
+  + '.sub{text-align:center;font-size:9pt;color:#444;margin-bottom:10pt}.no{font-size:9pt;color:#333}.rm{font-size:9pt;color:#333;margin-top:2pt}'
+  + '.sec{margin:8pt 0}.sl{font-weight:bold}.sign{margin-top:20pt;font-size:10.5pt}</style></head><body>'
+  + '<h1>计算机网络应用（53690）实验报告</h1><div class="sub">国家开放大学考试改革试点课程 · 湖北开放大学人工智能学院</div>'
+  + body + '</body></html>';
+}
+function downloadBlob(data, fn, mime){
+  const blob = new Blob([data], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = fn;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1200);
 }
 function safeName(s){ return String(s||'学生').replace(/[\\/:*?"<>|\s]/g,'_'); }
-function openReport(html, fn){
+function openReport(html, fn, wordHtml, docName){
   const w = window.open('', '_blank');
   if(!w){ toast('浏览器拦了新窗口，用“下载报告文件”吧'); return; }
   w.document.open(); w.document.write(html); w.document.close(); w.document.title = fn;
+  try{
+    const bd = w.document.getElementById('btnDoc');
+    if(bd) bd.onclick = function(){ downloadBlob(wordHtml, docName, 'application/msword'); };
+    const bp = w.document.getElementById('btnPrint');
+    if(bp) bp.onclick = function(){
+      try{ w.focus(); w.print(); }
+      catch(e){ w.alert('当前浏览器不支持直接打印，请点左侧“下载 Word 版（.doc）”，用 WPS 打开后另存为 PDF。'); }
+    };
+  }catch(e){}
 }
 function downloadReport(html, fn){
   const blob = new Blob([html], {type:'text/html;charset=utf-8'});
@@ -1264,7 +1299,17 @@ function handleClick(e){
   if(act === 'export'){
     if(!stuOk()) return;
     if(!state.stu.name){ toast('先填姓名，报告要签名'); return; }
-    openReport(reportDoc(reportHTML(pid,false), p.title+' 实验报告'), safeName(state.stu.id)+'_'+safeName(state.stu.name)+'_'+p.title+'.html');
+    const bodyHtml = reportHTML(pid,false);
+    const base = safeName(state.stu.id)+'_'+safeName(state.stu.name)+'_'+p.title;
+    openReport(reportDoc(bodyHtml, p.title+' 实验报告'), base+'.html', wordDoc(bodyHtml, p.title+' 实验报告'), base+'.doc');
+    return;
+  }
+  if(act === 'dldoc'){
+    if(!stuOk()) return;
+    if(!state.stu.name){ toast('先填姓名，报告要签名'); return; }
+    const bodyHtml = reportHTML(pid,false);
+    downloadBlob('\ufeff'+wordDoc(bodyHtml, p.title+' 实验报告'), safeName(state.stu.id)+'_'+safeName(state.stu.name)+'_'+p.title+'.doc', 'application/msword');
+    toast('Word 版已下载：手机用 WPS 打开，可直接另存为 PDF 或发电脑打印');
     return;
   }
   if(act === 'download'){
