@@ -120,7 +120,25 @@ main{padding:16px 0 48px}
 .acts{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,14px);max-width:88%;background:#22282a;color:#fff;font-size:13.5px;padding:10px 14px;border-radius:9px;opacity:0;pointer-events:none;transition:.25s;z-index:50;line-height:1.5}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+/* 报告整页视图 */
+.reportwrap{padding:18px 16px}
+.reportwrap .rh{border-bottom:2px solid #10635a;padding-bottom:8px;margin-bottom:12px}
+.reportwrap .no{font-size:12px;color:#10635a;letter-spacing:.1em}
+.reportwrap .rm{font-size:12.5px;color:#666;margin-top:4px}
+.reportwrap h2{font-size:19px;margin:0 0 4px}
+.reportwrap h3{font-size:15px;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.reportwrap p{font-size:14px;line-height:1.8}
+.reportwrap table.t{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px;margin:8px 0}
+.reportwrap table.t th,.reportwrap table.t td{border:1px solid #d8d8d0;padding:6px 8px;vertical-align:middle;word-break:break-word}
+.reportwrap table.t th{background:#efeee8;text-align:center}
+.reportwrap .sec{margin:12px 0}
+.reportwrap .sl{font-weight:600;color:#10635a;font-size:14px}
+.reportwrap .sv{font-size:14px;margin-top:3px;line-height:1.8}
+.reportwrap .none{color:#999}
+.reportwrap .sign{margin-top:26px;font-size:13px;color:#444}
+.reportwrap .chart svg{max-width:100%;height:auto}
 @media print{.hd,.acts,.toast,.back{display:none}}
+@media print{.reportwrap{border:0;padding:0}}
 </style>
 </head>
 <body>
@@ -1299,9 +1317,17 @@ function handleClick(e){
   if(act === 'export'){
     if(!stuOk()) return;
     if(!state.stu.name){ toast('先填姓名，报告要签名'); return; }
-    const bodyHtml = reportHTML(pid,false);
-    const base = safeName(state.stu.id)+'_'+safeName(state.stu.name)+'_'+p.title;
-    openReport(reportDoc(bodyHtml, p.title+' 实验报告'), base+'.html', wordDoc(bodyHtml, p.title+' 实验报告'), base+'.doc');
+    location.hash = '#/p/' + pid + '/report';
+    toast('报告已生成：要交作业点“下载 Word 版”');
+    return;
+  }
+  if(act === 'backexp'){
+    location.hash = '#/p/' + pid;
+    return;
+  }
+  if(act === 'print'){
+    try{ window.print(); }
+    catch(e){ toast('当前浏览器不支持直接打印，请用“下载 Word 版”'); }
     return;
   }
   if(act === 'dldoc'){
@@ -1370,8 +1396,15 @@ function goHome(){
   refresh();
 }
 function route(){
+  const rp = location.hash.match(/^#\/p\/(p\d)\/report/);
   const m = location.hash.match(/^#\/p\/(p\d)/);
-  if(m && DATA.some(p=>p.id===m[1])){
+  if(rp && DATA.some(p=>p.id===rp[1])){
+    document.getElementById('viewHome').hidden = true;
+    document.getElementById('viewProject').hidden = false;
+    document.getElementById('btnBack').hidden = false;
+    renderReport(rp[1]);
+    window.scrollTo(0,0);
+  }else if(m && DATA.some(p=>p.id===m[1])){
     document.getElementById('viewHome').hidden = true;
     document.getElementById('viewProject').hidden = false;
     document.getElementById('btnBack').hidden = false;
@@ -1380,6 +1413,18 @@ function route(){
   }else{
     goHome();
   }
+}
+function renderReport(pid){
+  const p = proj(pid);
+  CUR = pid;
+  document.getElementById('pbody').innerHTML =
+    '<div class="phead"><div class="acts">'
+    + '<button class="sbtn g" data-a="backexp">返回实验步骤</button>'
+    + '<button class="sbtn" data-a="dldoc">下载 Word 版（.doc）</button>'
+    + '<button class="sbtn g" data-a="print">打印 / 存为 PDF</button>'
+    + '</div>'
+    + '<p style="font-size:13px;color:#5b6a68;margin-top:8px">这就是你的实验报告，内容取自本机记录。要交作业点“下载 Word 版”，手机用 WPS 打开即可另存 PDF。</p></div>'
+    + '<div class="card reportwrap">' + reportHTML(pid,false) + '</div>';
 }
 function init(){
   load();
